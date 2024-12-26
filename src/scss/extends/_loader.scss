@@ -1,0 +1,8 @@
+@use '../tools/index' as *;
+
+.loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: $vh100;
+}

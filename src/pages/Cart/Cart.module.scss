@@ -1,0 +1,26 @@
+.cart {
+  &__container {
+    padding-block: 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 24px;
+  }
+
+  &__btn {
+    margin: 0 auto;
+    margin-top: 42px;
+    padding: 16px;
+    background-color: black;
+    border-radius: 5px;
+
+    font-size: 20px;
+    color: white;
+  }
+}
