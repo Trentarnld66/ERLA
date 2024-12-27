@@ -1,31 +1,27 @@
 import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
+
 import { FC } from 'react';
 import Card from '../../components/Card';
 
 import style from './Catalog.module.scss';
 import clsx from 'clsx';
 import Loader from '../../components/Loader';
+import fetchProductsList from '../../API/fetchProductsList';
 
-type Product = {
+interface IProduct {
   id: number;
-  title: string;
-  image: string;
-};
-
-const fetchProducts = async (): Promise<Product[]> => {
-  const { data } = await axios.get('https://fakestoreapi.com/products');
-  return data;
-};
+  name: string;
+  image_link: string | null;
+}
 
 const Catalog: FC = () => {
   const {
     data: productList,
     isLoading,
     isPending,
-  } = useQuery<Product[]>({
+  } = useQuery<IProduct[]>({
     queryKey: ['products'],
-    queryFn: fetchProducts,
+    queryFn: fetchProductsList<IProduct>,
   });
 
   if (isLoading || isPending)
@@ -35,11 +31,17 @@ const Catalog: FC = () => {
       </div>
     );
 
+  const filteredProducts = productList
+    ?.filter(
+      (product) => product.image_link && product.image_link.trim() !== ''
+    )
+    .slice(0, 24);
+
   return (
     <ul className={style.catalog}>
       <div className={clsx(style.catalog__container, 'container')}>
-        {productList?.map(({ id, title, image }) => (
-          <Card key={id} id={id} title={title} image={image} />
+        {filteredProducts?.map(({ id, name, image_link }) => (
+          <Card key={id} id={id} title={name} image={image_link!} />
         ))}
       </div>
     </ul>

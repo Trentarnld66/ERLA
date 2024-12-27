@@ -1,7 +1,6 @@
 import { FC, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
-import axios from 'axios';
 
 import Loader from '../../components/Loader';
 
@@ -9,17 +8,8 @@ import style from './Detail.module.scss';
 import clsx from 'clsx';
 import useCart from '../Cart/useCart';
 
-interface IProduct {
-  id: number;
-  title: string;
-  image: string;
-  description: string;
-}
-
-const fetchProduct = async (id: number): Promise<IProduct> => {
-  const { data } = await axios.get(`https://fakestoreapi.com/products/${id}`);
-  return data;
-};
+import type { IProduct } from '../../API/interfaces';
+import fetchProduct from '../../API/fetchProduct';
 
 const Detail: FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -36,7 +26,7 @@ const Detail: FC = () => {
     isPending,
   }: UseQueryResult<IProduct> = useQuery({
     queryKey: ['products', id],
-    queryFn: (): Promise<IProduct> => fetchProduct(Number(id)),
+    queryFn: (): Promise<IProduct | null> => fetchProduct(id!),
   });
 
   if (isLoading || isPending)
@@ -46,10 +36,10 @@ const Detail: FC = () => {
       </div>
     );
 
-  const { image, title, description } = productData!;
+  const { image_link, name, description } = productData!;
 
   const handleAddToCart = (): void => {
-    addItemToCart(id!, title!, image!);
+    addItemToCart(id!, name!, image_link!);
   };
 
   const handleRemoveFromCart = (): void => {
@@ -64,8 +54,8 @@ const Detail: FC = () => {
         <div className={style.detail__loader}>
           {isImageLoading && <Loader />}
           <img
-            src={image}
-            alt={title}
+            src={image_link}
+            alt={name}
             className={clsx(
               style.detail__img,
               isImageLoading && style.detail__img_hidden
@@ -75,7 +65,7 @@ const Detail: FC = () => {
         </div>
 
         <div className={style.detail__content}>
-          <h2 className={style.detail__name}>{title}</h2>
+          <h2 className={style.detail__name}>{name}</h2>
           <p className={style.detail__descr}>{description}</p>
           <button
             className={style.detail__btn}
