@@ -15,26 +15,23 @@ const CartItem: FC<CartItemProps> = ({ id, item, onRemove }) => {
 
   return (
     <li key={id} className={style.cartItem}>
-      <div className={clsx(style.cartItem__container, 'container')}>
-        <div className={style.cartItem__loader}>
-          {isImageLoading && <Loader />}
-          <img
-            src={item.image}
-            alt={item.title}
-            className={clsx(
-              style.cartItem__img,
-              isImageLoading && style.cartItem__img_hidden
-            )}
-            onLoad={handleImageLoad}
-          />
-        </div>
-
-        <div className={style.cartItem__content}>
-          <h2 className={style.cartItem__name}>{item.title}</h2>
-          <button className={style.cartItem__btn} onClick={() => onRemove(id)}>
-            Удалить
-          </button>
-        </div>
+      <div className={style.cartItem__loader}>
+        {isImageLoading && <Loader />}
+        <img
+          src={item.image}
+          alt={item.title}
+          className={clsx(
+            style.cartItem__img,
+            isImageLoading && style.cartItem__img_hidden
+          )}
+          onLoad={handleImageLoad}
+        />
+      </div>
+      <div className={style.cartItem__content}>
+        <h2 className={style.cartItem__name}>{item.title}</h2>
+        <button className={style.cartItem__btn} onClick={() => onRemove(id)}>
+          Удалить
+        </button>
       </div>
     </li>
   );
